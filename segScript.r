@@ -1,10 +1,47 @@
 require("raster")
 library(base)
+library(stringr)
+#######################
+#--Command line arguments:
+# Root directory for for testing.
+# Meant to be attained as commandline argument [rootDir]:
+rootDir = "G:/Shared drives/Leaf_cabinet_data"
+
+# Listed files within root, current testing is length [1-21]:
+leafIdList = list.files(rootDir)
+
+# To be ran iterative in production:
+testIdImage = leafIdList[2]
+
+# Where to search for '.hdr' file containing gain values
+tempWorkingDir = paste(rootDir,testIdImage,sep = '/')
+
+# The location of '.hdr' files within given imageID
+# ASSUMES
+# [1] for 1000ms exposure
+# [2] for 200ms exposure wl
+hdrArr = list.files(tempWorkingDir, recursive = 'TRUE', pattern = '.hdr')
+
+#This is the location of the first set of Gains:
+# ASSUMES for testing, starting with the 1000ms exposure
+fullHdrDir = paste(tempWorkingDir,hdrArr[1],sep = '/')
+
+# This is the rough shape of the gain vector
+hdrFile = readLines(con = fullHdrDir)[16]
+
+# Convert the hdrLine from string to object
+# First remove all unnecessary chars:
+gains = str_remove_all(hdrFile,"[datgivluesn={}]")
+# next separate each string
+gains = strsplit(gains,',')
+# Convert them to double data types
+gains = mapply(as.double,gains)
+
+########################
 
 ### -- Prep for cluster process -- ###
 #take imagery from the two folders with different exposure
 # Notes: These img variables..(img_list, and img_list2) contain all exposures and frequencies of the same leaf.
-
 img_list<- list.files('G:/Shared drives/Leaf_cabinet_data/leaf_2020_cabinet_200919_100050_ID980/leaf_2020_200ms_80wl/leaf_2020_200ms_80wl_000000',pattern = ".png", full.names = TRUE)[1:25]
 img_list2<- list.files('G:/Shared drives/Leaf_cabinet_data/leaf_2020_cabinet_200919_100050_ID980/leaf_2020_1000ms_80/leaf_2020_1000ms_80_000000',pattern = ".png", full.names = TRUE)[26:80]
 
@@ -111,12 +148,12 @@ points(64,66) #Top Right
 points(58,56) #Bottom Left
 points(64,56) #Bottom Right
 #reclassify leaf only
-img_sub <- img_df[img_df$z == leaf,]
-img_sub <- kmeans(img_sub[1:82], 2)#changed originally from 1:82
-img_df[img_df$z == 1, "z"] <- 3
-img_df[img_df$z == 2, "z"] <- NA
+#img_sub <- img_df[img_df$z == leaf,]
+#img_sub <- kmeans(img_sub[1:82], 2)#changed originally from 1:82
+#img_df[img_df$z == 1, "z"] <- 3
+#img_df[img_df$z == 2, "z"] <- NA
 #this line won't throws error when Leaf is in cluster 1
-img_df[is.na(img_df$z), "z"] <- img_sub$cluster
+#img_df[is.na(img_df$z), "z"] <- img_sub$cluster
 
-img_plot <- rasterFromXYZ(img_df[81:83])
-plot(img_plot)
+#img_plot <- rasterFromXYZ(img_df[81:83])
+#plot(img_plot)
