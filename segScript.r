@@ -7,43 +7,60 @@ library(stringr)
 # Meant to be attained as commandline argument [rootDir]:
 rootDir = "G:/Shared drives/Leaf_cabinet_data"
 
-# Listed files within root, current testing is length [1-21]:
+# Listed files within root, current testing is length [2-22]:
 leafIdList = list.files(rootDir)
 
 # To be ran iterative in production:
+#for( i in 1:length(leafIdList))
+#
+#   iTH_image_dir <- paste(rootDir, leafIdList[i], sep='/')                     # setTempWorkDir
+#   cluster_list <- list.files(iTH_image_dir, recursive = TRUE, pattern = '.png',full.names=TRUE)[1:80] # for clustering
+#   img_list <- list.files(iTH_image_dir, recursive = TRUE, pattern = '.png',full.names=TRUE)           #contains all [1:160]
+#   hdrArr<- list.files(iTH_image_dir, recursive = 'TRUE', pattern = '.hdr')  # hdr for 1000 & 200 respectively
+#   gainVec <- getGains(iTH_image_dir)                                        # currently [1:160]
+#   # ADD CLUSTERING PRE-PROCESS                                              # Perform clustering then segmentation
+#   for(j in 1:length(img_list))
+#    {
+#       img <- raster(img_list[j])                                            # Grab individual band Img after clustering
+#       leaf_df <- img[k_img$cluster == leaf]                                 # Identify leaf within image
+#       str("mean for image: ")
+#       str(img_list[j])
+#       str(mean(sapply)(leaf_df, function(x){x=x*gains[i]}))
+#    }
+#   
+#}
 testIdImage = leafIdList[2]
 
 # Where to search for '.hdr' file containing gain values
 tempWorkingDir = paste(rootDir,testIdImage,sep = '/')
 
-# The location of '.hdr' files within given imageID
-# ASSUMES
-# [1] for 1000ms exposure
-# [2] for 200ms exposure wl
-hdrArr = list.files(tempWorkingDir, recursive = 'TRUE', pattern = '.hdr')
-
-#This is the location of the first set of Gains:
-# ASSUMES for testing, starting with the 1000ms exposure
-fullHdrDir = paste(tempWorkingDir,hdrArr[1],sep = '/')
-
-# This is the rough shape of the gain vector
-hdrFile = readLines(con = fullHdrDir)[16]
-
-# Convert the hdrLine from string to object
-# First remove all unnecessary chars:
-gains = str_remove_all(hdrFile,"[datgivluesn={}]")
-# next separate each string
-gains = strsplit(gains,',')
-# Convert them to double data types
-gains = mapply(as.double,gains)
-
-########################
+## STAND-ALONE FUNCTION TO GRAB GAIN VECTORS
+# ASSUMES : 
+# - hdrDir is absolute path of working directory of unique ID
+# - returns vector of gain values 1000ms and 200ms, [1:80] and [81:160] respectively
+# - Gain Vector is on line 16 of hdr files
+getGains <- function(hdrDir) 
+{
+  hdrArr = list.files(hdrDir, recursive = 'TRUE', pattern = '.hdr') 
+  gains <- list()
+  for(hdr in hdrArr)
+  {
+    fullHdrDir <- paste(hdrDir,hdr,sep = '/')
+    hdrFile = readLines(con = fullHdrDir)[16]
+    hdrFile = str_remove_all(hdrFile,"[datgivluesn={}]")
+    hdrFile = strsplit(hdrFile,',')
+    hdrFile = mapply(as.double,hdrFile)
+    gains = c(gains,hdrFile)
+  }
+  return(gains) #[1:160]
+}
+################################################################## End F(x)
 
 ### -- Prep for cluster process -- ###
 #take imagery from the two folders with different exposure
 # Notes: These img variables..(img_list, and img_list2) contain all exposures and frequencies of the same leaf.
-img_list<- list.files('G:/Shared drives/Leaf_cabinet_data/leaf_2020_cabinet_200919_100050_ID980/leaf_2020_200ms_80wl/leaf_2020_200ms_80wl_000000',pattern = ".png", full.names = TRUE)[1:25]
-img_list2<- list.files('G:/Shared drives/Leaf_cabinet_data/leaf_2020_cabinet_200919_100050_ID980/leaf_2020_1000ms_80/leaf_2020_1000ms_80_000000',pattern = ".png", full.names = TRUE)[26:80]
+#img_list<- list.files('G:/Shared drives/Leaf_cabinet_data/leaf_2020_cabinet_200919_100050_ID980/leaf_2020_200ms_80wl/leaf_2020_200ms_80wl_000000',pattern = ".png", full.names = TRUE)[1:25]
+#img_list2<- list.files('G:/Shared drives/Leaf_cabinet_data/leaf_2020_cabinet_200919_100050_ID980/leaf_2020_1000ms_80/leaf_2020_1000ms_80_000000',pattern = ".png", full.names = TRUE)[26:80]
 
 #for ID 984
 #img_list<- list.files('G:/Shared drives/Leaf_cabinet_data/leaf_2020_cabinet_200919_094034_ID984/leaf_2020_200ms_80wl/leaf_2020_200ms_80wl_000000',pattern = ".png", full.names = TRUE)[1:25]
@@ -62,7 +79,12 @@ img_list2<- list.files('G:/Shared drives/Leaf_cabinet_data/leaf_2020_cabinet_200
 #TO DO: these are absolute values and should be replaced by calibrated ones
 
 #concatenate the list of exposures to one array.
-img_list <- c(img_list, img_list2)
+#img_list <- c(img_list, img_list2)
+
+#test
+img_list <- list.files(tempWorkingDir, recursive = TRUE, pattern = '.png',full.names = TRUE)[1:80]
+#endTest
+
 #cropping mask, this gets new view/size of current image dimensions
 # Notes: Our lab data goes from 128x128 -> 82x82 (from center)
 crop_percent <- 0.2
