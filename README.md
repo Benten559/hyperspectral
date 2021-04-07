@@ -35,4 +35,9 @@ Contained in ".hdr":
 Contained in 1000ms and 200ms exposure folders:
  * 80 images of unique leaf at different wavelegnth values
  * ".hdr" file containing wavelength values and corresponding gain offset values
- 
+#### ex. root/imgID/1000ms/imgs[1:80]
+ ### File structure of images post processing:
+Similar to raw image file structure except for additional folder for segmented leaf and 'standard'
+#### ex. root/imgID/1000ms/Cropped/imgs[1:80]
+#### ex. root/imgID/1000ms/standard_dir/imgs[1:80]
+
