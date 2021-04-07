@@ -5,13 +5,23 @@ Work in progress*
 This repo will contain the framework for a lab testing kit/package.
 Individual modules will be implemented to do different tasks such as segmentation, analysis, render graphical statistics.
 ## Current status of analysis code:
-### Analysis has been created into a procedure by using original code and inserting into necessary loop protocols.
+### Analysis has been created into a multi-step procedure, some steps utilize a separate script for prep.
+# Radiance Calculation: 
+## utilizes : folderRename.py
 * Traverses through leaf data set file structure, extracts appropiate gain values from ".hdr" file within each image folder.
+* execute "folderRename" script to faciliate R script calculation by conforming to uniform directory structure.
+** changing "cropped"|"c" to "Cropped"
 * Calculates radiance values for every individual image, respective of which wavelength.
-* Stores them into csv file for further calculation of vegetation indices
+* Stores them into two distinct csv files, one for each exposure 1000ms and 200ms, for further schema processing. 
+# Dataframe Schema Process
+## utilizes : reOrg.py
+* Using resultant csv files from prior step, capture radiance average values into new format of shape:
+ columns = imgID, wv_1,wv_2,..,wv_N
+# Vegetation Index Calculation
+## IN PROGRESS
 
-Current file structure:
 
+### Current file structure of raw images:
 Contained in "rootDirectory":
  *  List of all image ID's
 
