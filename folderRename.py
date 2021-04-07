@@ -13,16 +13,3 @@ for fn in os.listdir(basedir):
             print("changed from: ", work_dir + "\\" + view[0], 'to: ', work_dir+"\Cropped")
             os.rename(work_dir + "\\"+view[0],work_dir+"\Cropped")
             
-        
-
-    # if not os.path.isdir(os.path.join(basedir, fn)):
-    #     print("no such dir")
-    #     continue # Not a directory
-    # if ',' in fn:
-    #     print("found cropped")
-    #     continue # Already in the correct form
-    # if ' ' not in fn:
-    #     continue # Invalid format
-#   firstname,_,surname = fn.rpartition(' ')
-#   os.rename(os.path.join(basedir, fn),
-#             os.path.join(basedir, surname + ', ' + firstname))
