@@ -5,9 +5,10 @@ Work in progress*
 This repo will contain the framework for a lab testing kit/package.
 Individual modules will be implemented to do different tasks such as segmentation, analysis, render graphical statistics.
 ## Current status of analysis code:
-### Analysis has been created into a multi-step procedure, some steps utilize a separate script for prep.
+### Analysis has been created into a multi-step procedure, some steps utilize a separate script for prep. 
+### at present time a photoshop-preprocessed image data set is being used, for now ignore procedure.r and segScript.r
 # Radiance Calculation: 
-## utilizes : folderRename.py
+## utilizes : photoShopProcedure.r , folderRename.py
 * Traverses through leaf data set file structure, extracts appropiate gain values from ".hdr" file within each image folder.
 * execute "folderRename" script to faciliate R script calculation by conforming to uniform directory structure.
 ** changing "cropped"|"c" to "Cropped"
