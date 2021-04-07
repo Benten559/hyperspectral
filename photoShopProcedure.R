@@ -55,7 +55,7 @@ for( i in 1:length(leafIdList))
   gainVec <- getGains(iTH_image_dir)
   exposures <- grabCropped(iTH_image_dir)
   #for loop for each exposure here:
-  iTH_image_dir <- paste(iTH_image_dir,exposures[1],sep = '/') #should contain (root,imgDIr,CroppedDir)
+  iTH_image_dir <- paste(iTH_image_dir,exposures[2],sep = '/') #should contain (root,imgDIr,CroppedDir)
   entire_img_list <- list.files(iTH_image_dir, recursive = TRUE, pattern = '.png',full.names=TRUE)      #contains all cropped imgs for exposure 1000
   
   output_vector <- list()
@@ -75,7 +75,7 @@ for( i in 1:length(leafIdList))
   output_vector <- unlist(output_vector)
   df <- data.frame("fileID"=entire_img_list,"band"=wv,"rad_avg"= output_vector)
   str("inserting into csv")
-  write.table(df, file = "C:/Users/Ben's PC/Documents/research/hyperspectral/1000msRadianceAvg.csv", row.names = FALSE,sep = ',',col.names = FALSE ,append = TRUE)
+  write.table(df, file = "C:/Users/Ben's PC/Documents/research/hyperspectral/200msRadianceAvg.csv", row.names = FALSE,sep = ',',col.names = FALSE ,append = TRUE)
   str("finished Write\n")
   
 }

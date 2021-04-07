@@ -25,7 +25,7 @@ leafIdList = list.files(rootDir)
 #       leaf_df <- img[k_img$cluster == leaf]                                 # Identify leaf within image
 #       str("mean for image: ")
 #       str(img_list[j])
-#       str(mean(sapply)(leaf_df, function(x){x=x*gains[i]}))
+#       str(mean(sapply)(leaf_df, function(x){x=x*gains[j]}))
 #    }
 #   
 #}
@@ -102,7 +102,7 @@ img_values <- do.call(rbind, img_values)
 img_values <- t(img_values)
 # - Produce the clustering object from applying Kmeans algorithm.
 img_df <- as.data.frame(img_values)
-k_img <- kmeans(img_df, 2)
+k_img <- kmeans(img_df, 3)
 #k_img
 
 #Inspecting clusters:
