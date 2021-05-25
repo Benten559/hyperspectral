@@ -4,6 +4,7 @@ Work in progress*
 
 This repo will contain the framework for a lab testing kit/package.
 Individual modules will be implemented to do different tasks such as segmentation, analysis, render graphical statistics.
+<<<<<<< Updated upstream
 ## Current status of analysis code:
 ### Analysis has been created into a multi-step procedure, some steps utilize a separate script for prep. 
 ### at present time a photoshop-preprocessed image data set is being used, for now ignore procedure.r and segScript.r
@@ -41,3 +42,9 @@ Similar to raw image file structure except for additional folder for segmented l
 #### ex. root/imgID/1000ms/Cropped/imgs[1:80]
 #### ex. root/imgID/1000ms/standard_dir/imgs[1:80]
 
+=======
+
+Note: 
+Photoshop method; 200ms standard rad_avgs id leaf_2020_cabinet_200919_094034_ID984 omitted
+			 1000ms standard rad_avgs id leaf_2020_cabinet_200919_102907_ID971 omitted
+>>>>>>> Stashed changes

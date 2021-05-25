@@ -29,7 +29,7 @@ leafIdList = list.files(rootDir)
 #    }
 #   
 #}
-testIdImage = leafIdList[2]
+testIdImage = leafIdList[5]
 
 # Where to search for '.hdr' file containing gain values
 tempWorkingDir = paste(rootDir,testIdImage,sep = '/')
