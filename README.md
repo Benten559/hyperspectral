@@ -1,4 +1,4 @@
-## Note: current status: version1 of leaf segmentation
+## Note: current status: version1.1 of leaf segmentation
 # hyperspectral
 Research on plant imagery
 
@@ -7,7 +7,7 @@ Individual modules will be implemented to do different tasks such as segmentatio
 
 ## Order of execution:
 
-# Leaf segmentation ver1 complete (5/28/2021) 
+# Leaf segmentation ver1.1 complete (5/29/2021) 
 * Image preprocessing
 * cluster using k-means, k = 2 (background and objects of interest)
 * application of mask to focus on leaf - (depends on circular 'standard' segmentation)
