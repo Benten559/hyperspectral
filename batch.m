@@ -40,6 +40,14 @@ for i = 1:length(leafId)
     [fullCircle,outline] = segCircle(cast(segmentation,'double')); % logical circle outline
     mask = outline >0;
     leaf = segmentation ~= mask;
+    %store image
+    img = Cube.DataCube(:,:,40);
+    img = imagesc(img.*leaf);
+    %img = imshow(img);
+    saveas(img,fullfile('G:\Shared drives\Leaf_cabinet_data\imgFolder',id + string('.jpg'))) ;
+    %imwrite(img,fullfile('G:\Shared drives\Leaf_cabinet_data\imgFolder',id + string('.jpg'))) ;
+    %calculate radiance
+    %{
     for j = 1:length(wv)
         img = Cube.DataCube(:,:,j);
         img = img.*leaf;
@@ -49,7 +57,6 @@ for i = 1:length(leafId)
         avgxband(j) = sumRadiance/leafPixels;
     end
     %imshow(img)
-    
-    writematrix([id string(avgxband)],'test.csv','WriteMode','append');
+    %}
+    %writematrix([id string(avgxband)],'radAvg.csv','WriteMode','append');
 end
-
