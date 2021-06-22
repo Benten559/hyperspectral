@@ -41,16 +41,16 @@ for i = 1:length(leafId)
     % Create logical mask
     % HANDLING THE 4 PROBLEMATIC CASES:
     if id == "200919_113711_ID392" | id == "200919_103106_ID971" | id =="200920_102018_ID491" | id == "200919_094938_ID972"
-        segmentation = segmentation == leafCluster; % background was already labeled as such
+        segmentation = segmentation ~= leafCluster; % background was already labeled as such
     else
-        segmentation = segmentation ~= leafCluster; % every other image conforms to labeling method
+        segmentation = segmentation == leafCluster; % every other image conforms to labeling method
     end
     
 %    segmentation = segmentation == leafCluster; %for leaf analysis
     % Overlay circle mask
     [fullCircle,outline] = segCircle(cast(segmentation,'double')); % logical circle outline
     mask = outline >0; %WHEN SEG ~=LEAFCLUSTER, mask is inner circle
-%    leaf = segmentation ~= mask;
+    leaf = segmentation ~= mask;
     %store image
     %img = Cube.DataCube(:,:,40);
     %img = imagesc(img.*leaf);
