@@ -21,11 +21,7 @@ sRad = readtable('standardRadAvg.csv','ReadRowNames',true); %indexing: sRad{'row
 
 % GET .DAT OF BOTH EXPOSURES
 for i = 1:length(leafId)
-<<<<<<< Updated upstream
     id = idNames(:,19:37,i)
-=======
-    id = idNames(:,19:37,i) % trim only first left name
->>>>>>> Stashed changes
     datpath1000ms = fullfile(leafId(i),exposures(1),imgsFolder(1),dat(1));
     datpath200ms = fullfile(leafId(i),exposures(2),imgsFolder(2),dat(2));
     % acquire data cubes
@@ -57,12 +53,12 @@ for i = 1:length(leafId)
 %    leaf = segmentation ~= mask;
     %store image
     %img = Cube.DataCube(:,:,40);
-<<<<<<< Updated upstream
     %img = imagesc(img.*leaf);
     %img = imshow(img);
     %saveas(img,fullfile('G:\Shared drives\Leaf_cabinet_data\imgFolder',id + string('.jpg'))) ;
     %imwrite(img,fullfile('G:\Shared drives\Leaf_cabinet_data\imgFolder',id + string('.jpg'))) ;
-    %calculate radiance
+    
+
     %to do: re-insert 500 & 505 wv's to make length == 80
     for j = 1:length(wv)
         radOffset = sRad{id,j}    %Grab the matching ID's standard for calibration
@@ -75,36 +71,20 @@ for i = 1:length(leafId)
         %img = img.*dataGain(j);
         %img = img.*(.99/radOffset);
     
-    
+        % for averaging:
         %sumRadiance = sum(img([img~=0]));
         %leafPixels = length(img([img~=0]));
         %avgxband(j) = sumRadiance/leafPixels;
     end
     % store as a h5 binary rep
-    %imshow(img)
-    %}
-=======
     %img = imagesc(img.*mask);
     %saveas(img,fullfile('G:\Shared drives\Leaf_cabinet_data\standardImgFolder',id + string('.jpg'))) ;
-    %calculate radiance
-    
-    for j = 1:length(wv)
-        img = Cube.DataCube(:,:,j);
-        %img = img.*leaf; %FOR LEAF ANALYSIS
-        img = img.*mask;
-        img = img.*dataGain(j); %FOR RADIANCE ANALYSIS
-        sumRadiance = sum(img([img~=0]));
-        leafPixels = length(img([img~=0]));
-        avgxband(j) = sumRadiance/leafPixels;
-    end
-%    imshow(img)
-  
-    %**Write id's and radiance average**%
->>>>>>> Stashed changes
+
+    % FOR writing averages
     %writematrix([id string(avgxband)],'radAvg.csv','WriteMode','append');
     %**Write id's (full name) to column**%
     %writematrix([id],'dateTimeId.csv','WriteMode','append');
     %**Write circular standard radiance averages**%
-    writematrix([id string(avgxband)],'standardRadAvg.csv','WriteMode','append');
+    %writematrix([id string(avgxband)],'standardRadAvg.csv','WriteMode','append');
     
 end
