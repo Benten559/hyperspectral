@@ -21,7 +21,11 @@ sRad = readtable('standardRadAvg.csv','ReadRowNames',true); %indexing: sRad{'row
 
 % GET .DAT OF BOTH EXPOSURES
 for i = 1:length(leafId)
+<<<<<<< Updated upstream
     id = idNames(:,19:37,i)
+=======
+    id = idNames(:,19:37,i) % trim only first left name
+>>>>>>> Stashed changes
     datpath1000ms = fullfile(leafId(i),exposures(1),imgsFolder(1),dat(1));
     datpath200ms = fullfile(leafId(i),exposures(2),imgsFolder(2),dat(2));
     % acquire data cubes
@@ -39,13 +43,21 @@ for i = 1:length(leafId)
     leafSeg = imcrop(segmentation, rec); % focus point is center rectangle
     leafCluster = mode(leafSeg(:));
     % Create logical mask
-    segmentation = segmentation == leafCluster;
+    % HANDLING THE 4 PROBLEMATIC CASES:
+    if id == "200919_113711_ID392" | id == "200919_103106_ID971" | id =="200920_102018_ID491" | id == "200919_094938_ID972"
+        segmentation = segmentation == leafCluster; % background was already labeled as such
+    else
+        segmentation = segmentation ~= leafCluster; % every other image conforms to labeling method
+    end
+    
+%    segmentation = segmentation == leafCluster; %for leaf analysis
     % Overlay circle mask
     [fullCircle,outline] = segCircle(cast(segmentation,'double')); % logical circle outline
-    mask = outline >0;
-    leaf = segmentation ~= mask;
+    mask = outline >0; %WHEN SEG ~=LEAFCLUSTER, mask is inner circle
+%    leaf = segmentation ~= mask;
     %store image
     %img = Cube.DataCube(:,:,40);
+<<<<<<< Updated upstream
     %img = imagesc(img.*leaf);
     %img = imshow(img);
     %saveas(img,fullfile('G:\Shared drives\Leaf_cabinet_data\imgFolder',id + string('.jpg'))) ;
@@ -71,5 +83,28 @@ for i = 1:length(leafId)
     % store as a h5 binary rep
     %imshow(img)
     %}
+=======
+    %img = imagesc(img.*mask);
+    %saveas(img,fullfile('G:\Shared drives\Leaf_cabinet_data\standardImgFolder',id + string('.jpg'))) ;
+    %calculate radiance
+    
+    for j = 1:length(wv)
+        img = Cube.DataCube(:,:,j);
+        %img = img.*leaf; %FOR LEAF ANALYSIS
+        img = img.*mask;
+        img = img.*dataGain(j); %FOR RADIANCE ANALYSIS
+        sumRadiance = sum(img([img~=0]));
+        leafPixels = length(img([img~=0]));
+        avgxband(j) = sumRadiance/leafPixels;
+    end
+%    imshow(img)
+  
+    %**Write id's and radiance average**%
+>>>>>>> Stashed changes
     %writematrix([id string(avgxband)],'radAvg.csv','WriteMode','append');
+    %**Write id's (full name) to column**%
+    %writematrix([id],'dateTimeId.csv','WriteMode','append');
+    %**Write circular standard radiance averages**%
+    writematrix([id string(avgxband)],'standardRadAvg.csv','WriteMode','append');
+    
 end
