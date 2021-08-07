@@ -18,94 +18,111 @@ gain(2,:) = gain10ms;
 gain(3,:) = gain25ms;
 avgxband = zeros(1,240);
 idNames = char(leafId);
-std_arr = []; %accumulator of reflectance objects
+refl_arr = []; %accumulator of reflectance objects
 %% PROGRAM SWITCHES
-analyzeStandard = true;
-storeAvgMode = false;
-reflectanceWrite = true;
-imgWriteMode = false;
+ProgMode = 1; %1:5ms , 2:10ms , 3:25ms
+AnalyzeStandard = false;
+IgnoreImg = true;
+SegmentMode = true;
+ReflectanceWrite = false;
+ImgWriteMode = true;
+AccumulateStandard = false;
+StoreAvgMode = false;
 %% DATA DEPENDENCIES
-refSheet = readtable("D:\assets\StSupery_Work_file",'ReadRowNames',true);
-refAvg = readtable("D:\assets\Radiance Sheets\StandardRadianceAvg5ms",'ReadRowNames',true); %5ms
-%% LOOP, GRAB STANDARDS
-for i = 1:length(leafId)
-    try
-        id = idNames(:,1:32,i)
-    catch
-        id = "CorruptName" + string(i);
-    end
+refSheet = readtable("D:\St_Supery_IOP1_Sep2020\StSupery_Work_file",'ReadRowNames',true);
+%refAvg = readtable("D:\assets\Radiance Sheets\StandardRadianceAvg5ms",'ReadRowNames',true); %5ms
+
+%% LOOP, ACCUMULATE STANDARDS
+if AccumulateStandard == true
+    for i = 1:length(leafId)
+        try
+            id = idNames(:,1:32,i)
+        catch
+            id = "CorruptName" + string(i);
+        end
     
-    if isnan(refSheet{id,4}) %calibration standards marked as NaN's   %~isnan(refSheet{id,4}) == analyzeStandard
-        if analyzeStandard == true
+        if isnan(refSheet{id,4}) % its a calibration standard
+            if AnalyzeStandard == true
             
-            rStandard = ReflectStandard(); %reflectance object
-            rStandard.name = id;
-            time = char(refSheet{id,3}); % The timestamp for this particular std_img
-            time = datetime(time(1:19),'InputFormat','yyyy-MM-dd HH:mm:ss'); %Grab substring, convert to datetime type.
-            rStandard.timeStamp = time; 
-            %arrRadAvg = refAvg{id,:}; 
-            for j = 1:length(wv) %This stores (reflectance_avg / avg_radiance)
-                rStandard.calibrationFactor(j) = refSheet{id,6}/refAvg{id,j};
+                rStandard = ReflectStandard(); %reflectance object
+                rStandard.name = id; % store the name
+                time = char(refSheet{id,3}); % The timestamp for this particular std_img
+                time = datetime(time(1:19),'InputFormat','yyyy-MM-dd HH:mm:ss'); %convert to datetime type
+                rStandard.timeStamp = time; % store the timestamp
+                for j = 1:length(wv) %This stores (reflectance_avg / avg_radiance)
+                    rStandard.calibrationFactor(j) = refSheet{id,6}/refAvg{id,j}; 
+                end
+                refl_arr =[rStandard refl_arr]; % accumulate the standards
+            else
+                continue;
             end
-            std_arr =[rStandard std_arr];
-        
-        else
-            continue;
         end
     end
 end
-%% LOOP, CALCULATE REFLECTANCE AVERAGES
-for i = 1:length(leafId)
-    try
-        id = idNames(:,1:32,i)
-    catch
-        id = "CorruptName" + string(i);
-    end
-    if isnan(refSheet{id,4}) %IGNORE THE STANDARDS
-        continue;
-    end
-    datPath = fullfile(leafId(i),exposures(1),imgsFolder(1),dat(1));
-    % load image
-    Cube = multibandread(datPath,[1024,1024,240],'uint16',0','bsq','ieee-be'); % 5ms initially, to save memory
-    hCube = hypercube(Cube,wv);
-    % color composite
-    cirIMG = colorize(hCube, "Method","cir","ContrastStretching",true); % better for NIR
-    % segment mask
-    [mask, maskedImg] = edgeGraphSegment(cirIMG);
-    
-    %store average radiance of each band
-    if storeAvgMode == true
-        for j = 1:length(wv)
-            img = hCube.DataCube(:,:,j).*mask;
-            img = img.*gain(j);
-            
-            sumRadiance = sum(nonzeros(img));%(img([img~=0]));
-            leafPixels = length(nonzeros(img));%(img([img~=0]));
-            avgxband(j) = sumRadiance/leafPixels;
+%% LOOP, CALCULATE RADIANCE/REFLECTANCE AVERAGES
+if SegmentMode == true
+    %Grab the name of the file
+    for i = 1:length(leafId) 
+        % Error handling
+        try
+            id = idNames(:,1:32,i)
+        catch
+            id = "CorruptName" + string(i);
         end
-        %store in dir:
-        writematrix([id string(avgxband)],'D:\assets\Radiance Sheets\StandardRadianceAvg25ms.csv','WriteMode','append');
+        % This can ignore calibration labels or images
+        if ~isnan(refSheet{id,4})
+            if IgnoreImg == true
+                continue
+            end
+        end
+        datPath = fullfile(leafId(i),exposures(ProgMode),imgsFolder(ProgMode),dat(ProgMode));
+        % Load image
+        try
+            Cube = multibandread(datPath,[1024,1024,240],'uint16',0','bsq','ieee-be'); % 5ms initially, to save memory
+        catch
+            error = "skipping, error on " + id
+            continue;
+        end
+        hCube = hypercube(Cube,wv);
+        % Color composite
+        cirIMG = colorize(hCube, "Method","cir","ContrastStretching",true); % better for NIR
+        % Segment mask
+        [mask, maskedImg] = edgeGraphSegment(cirIMG);
+        %store average radiance of each band
+        if StoreAvgMode == true
+             for j = 1:length(wv)
+                img = hCube.DataCube(:,:,j).*mask;
+                img = img.*gain(ProgMode, j);
+            
+                sumRadiance = sum(nonzeros(img));%(img([img~=0]));
+                leafPixels = length(nonzeros(img));%(img([img~=0]));
+                avgxband(j) = sumRadiance/leafPixels;
+             end
+            %store in dir:
+            writematrix([id string(avgxband)],'D:\assets\Radiance Sheets\StandardRadianceAvg5ms.csv','WriteMode','append');
+        end
+         %image write mode
+        if ImgWriteMode == true
+            imwrite([cirIMG, maskedImg],fullfile('D:\assets\Standard Segmentation',id + ".jpg")) ;
+        end
     end
+
+
    %Calculate reflectance
-   if reflectanceWrite == true
-       refArrIndex = selectStandard(refSheet{id,3},std_arr);  % choose which reflectance offset to use
+   if ReflectanceWrite == true
+       refArrIndex = selectStandard(refSheet{id,3},refl_arr);  % choose which reflectance offset to use
        
        for j = 1:length(wv)           
-           img = hCube.DataCube(:,:,j).*mask;
-           img = img.*gain(1,j);
-           img = img.*std_arr(refArrIndex).calibrationFactor(j);%(refSheet{std_arr(refArrIndex).name,6})
-           sumReflect = sum(nonzeros(img));
-           
-           leafPixels = length(nonzeros(img));
-           avgxband(j) = sumReflect/leafPixels;
+           img = hCube.DataCube(:,:,j); % grab image (multiply by mask for segmentation)
+           img = img.*gain(ProgMode,j); % apply gain factor
+           img = img.*refl_arr(refArrIndex).calibrationFactor(j);% apply reflectance scaling
+           sumReflect = sum(nonzeros(img)); % sum pixels of value
+           leafPixels = length(nonzeros(img)); % count of how many pixels contain values
+           avgxband(j) = sumReflect/leafPixels; % the average reflectance of image
        end
-       writematrix([id string(avgxband)],'D:\assets\Reflectance\StandardReflectanceAvg5ms.csv','WriteMode','append');
+       %Store average
+       writematrix([id string(avgxband)],'D:\assets\Reflectance\StandardReflectanceAvg25ms.csv','WriteMode','append');
    end
-   
-    %image write mode
-    if imgWriteMode == true
-        imwrite([cirIMG, maskedImg],fullfile('D:\assets\Standard Segmentations\',id + ".jpg")) ;
-    end
     
     
 end
