@@ -20,7 +20,7 @@ avgxband = zeros(1,240);
 idNames = char(leafId);
 refl_arr = []; %accumulator of reflectance objects
 %% PROGRAM SWITCHES
-ProgMode = 1; %1:5ms , 2:10ms , 3:25ms
+ProgMode = 2; %1:5ms , 2:10ms , 3:25ms
 AnalyzeStandard = false;
 IgnoreImg = true;
 SegmentMode = true;
@@ -29,7 +29,10 @@ ImgWriteMode = true;
 AccumulateStandard = false;
 StoreAvgMode = false;
 %% DATA DEPENDENCIES
-refSheet = readtable("D:\St_Supery_IOP1_Sep2020\StSupery_Work_file",'ReadRowNames',true);
+%refSheet = readtable("D:\St_Supery_IOP1_Sep2020\StSupery_Work_file",'ReadRowNames',true); % RED SSD#1
+%refSheet = readtable("D:\St_Supery_IOP1_Sep2020_contd\StSupery_Work_file",'ReadRowNames',true); % GREY SSD#5
+refSheet = readtable("D:\Tripod_data\Sep_2020\StSupery_Work_file",'ReadRowNames',true); % GREY SSD#4
+
 %refAvg = readtable("D:\assets\Radiance Sheets\StandardRadianceAvg5ms",'ReadRowNames',true); %5ms
 
 %% LOOP, ACCUMULATE STANDARDS
@@ -80,7 +83,7 @@ if SegmentMode == true
         try
             Cube = multibandread(datPath,[1024,1024,240],'uint16',0','bsq','ieee-be'); % 5ms initially, to save memory
         catch
-            error = "skipping, error on " + id
+            error = "skipping, hypercube error on " + id
             continue;
         end
         hCube = hypercube(Cube,wv);
@@ -99,11 +102,13 @@ if SegmentMode == true
                 avgxband(j) = sumRadiance/leafPixels;
              end
             %store in dir:
-            writematrix([id string(avgxband)],'D:\assets\Radiance Sheets\StandardRadianceAvg5ms.csv','WriteMode','append');
+            if prgMode == 2
+                writematrix([id string(avgxband)],'D:\assets\Radiance Sheets\StandardRadianceAvg10ms.csv','WriteMode','append');
+            end
         end
          %image write mode
         if ImgWriteMode == true
-            imwrite([cirIMG, maskedImg],fullfile('D:\assets\Standard Segmentation',id + ".jpg")) ;
+            imwrite([cirIMG, maskedImg],fullfile('C:\Users\15593\Documents\repos\hyperspectral\tripodAnalysis\Segmentation Test\Calibration Standards',id +"_ssd4"+ ".jpg")) ;
         end
     end
 
@@ -121,7 +126,9 @@ if SegmentMode == true
            avgxband(j) = sumReflect/leafPixels; % the average reflectance of image
        end
        %Store average
-       writematrix([id string(avgxband)],'D:\assets\Reflectance\StandardReflectanceAvg25ms.csv','WriteMode','append');
+       if prgMode == 2
+           writematrix([id string(avgxband)],'D:\assets\Reflectance\StandardReflectanceAvg10ms.csv','WriteMode','append');
+       end
    end
     
     
