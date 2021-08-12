@@ -3,7 +3,7 @@ function ind = selectStandard(sheet,rArray)%refSheet{id,3},std_arr);
                t = datetime(t(1:19),'InputFormat','yyyy-MM-dd HH:mm:ss');
                % Calculate time difference
                difference = rArray(1).timeStamp - t;
-               ind = 0;
+               ind = 1; % last one pushed in is likely the latest time stamp
                if difference < 0 
                    difference = difference*(-1);
                end
