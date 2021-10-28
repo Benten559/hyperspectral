@@ -2,6 +2,7 @@
 files = dir;    % Assumes '.dat' folders within working directory
 leafId = {files([files.isdir]).name};
 leafId = string(leafId(~ismember(leafId,{'.','..'})));
+% in test branch
 row = 200:802; % dimensions 
 col = 100:780;
 rec = [290 279 100 100]; % labeling bounding coordinates         
