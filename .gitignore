@@ -2,3 +2,6 @@
 sh.exe.stackdump
 testoutput.csv
 *.csv
+*.jpg
+*.png
+*.mat
