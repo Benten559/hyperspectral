@@ -91,9 +91,10 @@ def get_time(path):
 # TO GET STARTED:
 #   To begin using this code, alter the nas file path variable to your own:
 # Network Attached Storage, The source path to imagery
-nas = "V:\\Data\\St_Supery\\IOP3_July2021\\Tripod"#"V:\\Data\\St_Supery\\IOP1_Sep2020\\Tripod"#"V:\\Data\\St_Supery\\IOP4_August2021\\Tripod"
+nas = 'V:\\Data\\St_Supery\\IOP3_July2021\\drone\\5ms_40b_wide_210728_160322\\drone_40b_wide 2' 
+#"V:\\Data\\St_Supery\\IOP3_July2021\\Tripod"#"V:\\Data\\St_Supery\\IOP1_Sep2020\\Tripod"#"V:\\Data\\St_Supery\\IOP4_August2021\\Tripod"
 # Output name of your spreadsheet file
-outputName = "TripodIOP3"
+outputName = "DRONE_5ms_210728_160322"
 
 
 
@@ -106,9 +107,11 @@ imageFolder = listdir(nas)
 # Search through all image folders
 for folder in imageFolder:
     try:
-        imgSubPath = join(nas,folder,exposurePath)
+        imgSubPath = join(nas,folder)#exposurePath
         if not(isdir(imgSubPath)): continue
+        print(folder)
         hdrPath = get_hdr_file_path(imgSubPath)
+        # print(hdrPath)
         timestamp = get_time(hdrPath)
         rawGPS = grab_raw_coords(hdrPath)
         latList = [extract_coordinate(x)[0] for x in rawGPS]

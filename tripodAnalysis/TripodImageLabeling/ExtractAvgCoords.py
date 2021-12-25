@@ -94,9 +94,9 @@ def get_time(path):
 # The guide to labeled images (This must be generated using the standard identification workflow)
 # df_labelGuide = pd.read_csv('V:\\Data\\St_Supery\\Standards\\Standard Identification Process\\ImageCopy_IOP4\\IOP4_Tripod_Image_Label.csv').set_index('img_id')
 # Network Attached Storage, The source path to imagery
-nas = "V:\\Data\\St_Supery\\IOP4_August2021\\Tripod"
+nas = "V:\\Data\\St_Supery\\IOP3_July2021\\drone\\5ms_40b_wide_210728_160322\\drone_40b_wide 2"
 # Output name of your spreadsheet file
-outputName = "TripodIOP4 Nope"
+outputName = "DroneIOP3_5ms_40b_wide_210728_160322"
 # If the radian metric is desired set CALCULATE_ANGLE to True
 # CALCULATE_ANGLE = True
 ##<>##
@@ -118,8 +118,8 @@ for folder in imageFolder:
         # elif folder[-3:] == 'STD' or folder[-3:] == 'ERR':
         #     print("skipping: " + folder)
         #     continue
-        # print(folder)
-        imgSubPath = join(nas,folder,exposurePath)
+        print(folder)
+        imgSubPath = join(nas,folder)#,exposurePath)
         hdrPath = get_hdr_file_path(imgSubPath)
         timestamp = get_time(hdrPath)
         rawGPS = grab_raw_coords(hdrPath)
@@ -137,7 +137,7 @@ df_image = pd.DataFrame(dfInput,columns=["img_id","latitude","longitude","DT"])
 df_image = df_image.sort_values(by='DT',ascending=True)
 
 # if CALCULATE_ANGLE:
-#     df_image['degree'] = ''
+df_image['degree'] = ''
 for i in range( len(df_image)-1 ):
     xDiff = df_image.iloc[i,1] - df_image.iloc[i+1,1]
     yDiff = df_image.iloc[i,2] - df_image.iloc[i+1,2]
