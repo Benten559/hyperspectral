@@ -1,0 +1,104 @@
+
+tripod_canopy_2020_200901_140652
+
+The identifier was: 
+MATLAB:imagesci:h5create:datasetAlreadyExists
+
+There was an error! The message was:
+The dataset '/img' already exists.
+
+tripod_canopy_2020_200901_140652
+
+The identifier was: 
+MATLAB:imagesci:h5create:datasetAlreadyExists
+
+There was an error! The message was:
+The dataset '/img' already exists.
+
+tripod_canopy_2020_200903_091557
+
+The identifier was: 
+MATLAB:imagesci:h5create:datasetAlreadyExists
+
+There was an error! The message was:
+The dataset '/img' already exists.
+
+tripod_canopy_2020_200901_151527
+
+The identifier was: 
+MATLAB:imagesci:h5create:datasetAlreadyExists
+
+There was an error! The message was:
+The dataset '/img' already exists.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_151527.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_151635.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_151734.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_151904.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_152034.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_152221.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_152326.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_152419.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_152520.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_152615.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_152712.h5' and dataset '/img' do not exist.  See H5CREATE.
+
+The post identifier was: 
+MATLAB:imagesci:h5write:fileDoesNotExist
+
+There was an error! The message was:
+The file 'E:\Data\SeptTripodH5\tripod_canopy_2020_200901_152829.h5' and dataset '/img' do not exist.  See H5CREATE.

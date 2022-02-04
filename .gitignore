@@ -5,3 +5,5 @@ testoutput.csv
 *.jpg
 *.png
 *.mat
+*.h5
+*.pyc
